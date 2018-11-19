@@ -11,14 +11,12 @@ import { DisplayProperty } from 'csstype';
 */
 
 export function GridCSS(columns: DisplayProperty = 'repeat(5, 20%)') {
-  let GridRowCSS: CSSProperties = {
+  let css: CSSProperties = {
     display: 'grid',
     gridTemplateColumns: columns,
-    gridRowGap: '2em',
-    gridColumnGap: '1em',
   }
 
-  return GridRowCSS;
+  return css;
 
 }
 
@@ -27,4 +25,5 @@ export const GridRowCSS: React.CSSProperties = {
 }
 
 export const InventoryItemCSS: React.CSSProperties = {
+  margin: '10px'
 }

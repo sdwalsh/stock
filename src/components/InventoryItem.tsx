@@ -1,24 +1,27 @@
 import * as React from 'react';
-import { Button, ButtonGroup, Card, Elevation, Intent } from '@blueprintjs/core';
+import { Card, Elevation } from '@blueprintjs/core';
 import { InventoryItemCSS } from './Styles';
-import { Shoe, Item } from './Shoe';
+import { Item } from './Shoe';
 
 export interface IIventoryItemProps {
+  id: number,
   item: Item,
   style: React.CSSProperties,
+  handleClick: (id: number) => void,
 }
 
 export class InventoryItem extends React.Component <IIventoryItemProps, object> {
+
+  onClick() {
+    return this.props.handleClick(this.props.id);
+  }
+
   render() {
-    let s = this.props.item instanceof Shoe;
+    // let s = this.props.item instanceof Shoe;
 
     return (
-      <Card style={this.props.style} interactive={true} elevation={Elevation.TWO}>
-        <ButtonGroup>
-          <Button intent={Intent.PRIMARY} disabled={s}>Add</Button>
-          <Button intent={Intent.PRIMARY} disabled={!s}>Edit</Button>
-          <Button intent={Intent.DANGER} disabled={!s}>Remove</Button>
-        </ButtonGroup>
+      <Card onClick={() => this.onClick()} style={this.props.style} interactive={true} elevation={Elevation.TWO}>
+        <p>Contents</p>
       </Card>
     );
   }
