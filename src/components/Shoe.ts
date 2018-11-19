@@ -1,17 +1,27 @@
-export class Item {
+export interface Item {
   brand: string;
   upc: string;
-  constructor(brand: string, upc: string) {
-    this.brand = brand;
-    this.upc = upc;
+}
+
+export class EmptyItem implements Item {
+  brand: string;
+  upc: string;
+
+  constructor() {
+    this.brand = '';
+    this.upc = '';
   }
 }
 
-export class Shoe extends Item {
+export class Shoe implements Item {
+  brand: string;
+  upc: string;
   style: string;
   size: number;
-  constructor(style: string, size: number, brand: string, upc: string) {
-    super(brand, upc)
+
+  constructor(brand: string, upc: string, style: string, size: number) {
+    this.brand = brand;
+    this.upc = upc;
     this.style = style;
     this.size = size;
   }
