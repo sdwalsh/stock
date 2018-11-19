@@ -1,3 +1,6 @@
+import { CSSProperties } from 'react';
+import { DisplayProperty } from 'csstype';
+
 /*
   CSS Styles
 
@@ -6,15 +9,21 @@
   ~88.3% (firefox, chrome, safari, edge)
 */
 
-const GridCSS: React.CSSProperties= {
-  display: 'grid',
-  gridTemplateColumns: 'repeat(5, 1fr)',
+export function GridCSS(columns: DisplayProperty = 'repeat(5, 20%)') {
+  let GridRowCSS: CSSProperties = {
+    display: 'grid',
+    gridTemplateColumns: columns,
+    gridRowGap: '10em',
+    gridColumnGap: '5em',
+  }
+
+  return GridRowCSS;
+
 }
 
-const GridRow: React.CSSProperties = {
+export const GridRowCSS: React.CSSProperties = {
 
 }
 
-const InventoryItem: React.CSSProperties = {
-  margin: '10px',  
+export const InventoryItemCSS: React.CSSProperties = {
 }
