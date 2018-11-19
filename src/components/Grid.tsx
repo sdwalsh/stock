@@ -19,6 +19,12 @@ export interface IGridState {
   y: number,
   portal: boolean,
   selected: number,
+  editShoe: {
+    brand: string,
+    style: string,
+    upc: string,
+    size: number,
+  }
   shoes: Item[],
 }
 
@@ -40,10 +46,18 @@ export class Grid extends React.Component<IGridProps, IGridState> {
       y: props.y,
       portal: false,
       selected: 0,
+      editShoe: {
+        brand: '',
+        style: '',
+        upc: '',
+        size: 0,
+      },
       shoes: generateEmptyItems(props.x * props.y),
     }
 
     this.handleClick = this.handleClick.bind(this);
+    this.createNewShoe = this.createNewShoe.bind(this);
+    this.editShoe = this.editShoe.bind(this);
   }
 
   handleClick(id: number) {
@@ -51,6 +65,18 @@ export class Grid extends React.Component<IGridProps, IGridState> {
       selected: id,
       portal: true,
     });
+  }
+
+  createNewShoe() {
+
+  }
+
+  updateShoe() {
+    
+  }
+
+  editShoe(value: string | number) {
+
   }
 
   genInventoryItems() {
@@ -65,15 +91,36 @@ export class Grid extends React.Component<IGridProps, IGridState> {
     let shoe = this.state.shoes[this.state.selected];
 
     if(shoe instanceof Shoe) {
+      this.setState({
+        editShoe: {
+          brand: shoe.brand,
+          style: shoe.style,
+          upc: shoe.upc,
+          size: shoe.size,
+        }
+      });
+
       return(
         <div>
-          <H3><EditableText defaultValue={shoe.brand} /> --- <EditableText value={shoe.style} /></H3>
-          <p>Size: <EditableText defaultValue={shoe.size.toString()}/></p>
-          <p>UPC: <EditableText defaultValue={shoe.upc} /></p>
+          <H3><EditableText onConfirm={(value) => this.editShoe(value)} defaultValue={shoe.brand} /> --- <EditableText onChange={(value) => this.editShoe(value)} defaultValue={shoe.style} /></H3>
+          <p>Size: <EditableText onConfirm={(value) => this.editShoe(value)} defaultValue={shoe.size.toString()}/></p>
+          <p>UPC: <EditableText onConfirm={(value) => this.editShoe(value)} defaultValue={shoe.upc} /></p>
+          <ButtonGroup fill={true}>
+            <Button onClick={() => this.updateShoe()} intent={Intent.PRIMARY} icon="plus">Update</Button>
+          </ButtonGroup>
         </div>
       );
     }
     else {
+      this.setState({
+        editShoe: {
+          brand: '',
+          style: '',
+          upc: '',
+          size: 0,
+        }
+      });
+
       return (
         <div>
           <FormGroup>
@@ -83,7 +130,7 @@ export class Grid extends React.Component<IGridProps, IGridState> {
             <Label>UPC: <InputGroup id="input-upc" placeholder="UPC" /></Label>
             <Label>Size: <InputGroup id="input-size" placeholder="Size" /></Label>
             <ButtonGroup fill={true}>
-              <Button intent={Intent.PRIMARY} icon="plus">Create</Button>
+              <Button onClick={() => this.createNewShoe()} intent={Intent.PRIMARY} icon="plus">Create</Button>
             </ButtonGroup>
           </FormGroup>
         </div>
