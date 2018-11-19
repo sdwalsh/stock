@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Card, H3, Overlay, EditableText } from '@blueprintjs/core';
+import { Button, ButtonGroup, Card, H3, Overlay, EditableText, FormGroup, Label, InputGroup, Intent } from '@blueprintjs/core';
 
 import { EmptyItem, Item, Shoe } from './Shoe';
 import { InventoryItem } from './InventoryItem';
@@ -67,16 +67,25 @@ export class Grid extends React.Component<IGridProps, IGridState> {
     if(shoe instanceof Shoe) {
       return(
         <div>
-          <H3><EditableText value={shoe.brand} /> --- <EditableText value={shoe.style} /></H3>
-          <p>Size: <EditableText value={shoe.size.toString()}/></p>
-          <p>UPC: <EditableText value={shoe.upc} /></p>
+          <H3><EditableText defaultValue={shoe.brand} /> --- <EditableText value={shoe.style} /></H3>
+          <p>Size: <EditableText defaultValue={shoe.size.toString()}/></p>
+          <p>UPC: <EditableText defaultValue={shoe.upc} /></p>
         </div>
       );
     }
     else {
       return (
         <div>
-          <H3><EditableText value={'Add a New Item'} /></H3>
+          <FormGroup>
+            <H3>Add a New Item</H3>
+            <Label>Brand: <InputGroup id="input-brand" placeholder="Brand" /></Label>
+            <Label>Style: <InputGroup id="input-style" placeholder="Style" /></Label>
+            <Label>UPC: <InputGroup id="input-upc" placeholder="UPC" /></Label>
+            <Label>Size: <InputGroup id="input-size" placeholder="Size" /></Label>
+            <ButtonGroup fill={true}>
+              <Button intent={Intent.PRIMARY} icon="plus">Create</Button>
+            </ButtonGroup>
+          </FormGroup>
         </div>
       );
     }
