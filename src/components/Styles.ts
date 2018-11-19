@@ -6,7 +6,8 @@ import { DisplayProperty } from 'csstype';
 
   Using CSS Grid
   https://caniuse.com/#feat=css-grid
-  ~88.3% (firefox, chrome, safari, edge)
+  Global ~88.3% (firefox, chrome, safari, edge, partial IE)
+  US ~90.0% (firefox, chrome, safari, edge,  partial IE)
 */
 
 export function GridCSS(columns: DisplayProperty = 'repeat(5, 20%)') {
