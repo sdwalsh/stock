@@ -14,8 +14,8 @@ export function GridCSS(columns: DisplayProperty = 'repeat(5, 20%)') {
   let GridRowCSS: CSSProperties = {
     display: 'grid',
     gridTemplateColumns: columns,
-    gridRowGap: '10em',
-    gridColumnGap: '5em',
+    gridRowGap: '2em',
+    gridColumnGap: '1em',
   }
 
   return GridRowCSS;
