@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { Card, Overlay } from '@blueprintjs/core';
+import { Card, H3, Overlay, EditableText } from '@blueprintjs/core';
 
-import { EmptyItem, Item } from './Shoe';
+import { EmptyItem, Item, Shoe } from './Shoe';
 import { InventoryItem } from './InventoryItem';
 import { InventoryItemCSS, GridCSS } from './Styles';
 
@@ -18,6 +18,7 @@ export interface IGridState {
   x: number,
   y: number,
   portal: boolean,
+  selected: number,
   shoes: Item[],
 }
 
@@ -38,6 +39,7 @@ export class Grid extends React.Component<IGridProps, IGridState> {
       x: props.x,
       y: props.y,
       portal: false,
+      selected: 0,
       shoes: generateEmptyItems(props.x * props.y),
     }
 
@@ -45,8 +47,10 @@ export class Grid extends React.Component<IGridProps, IGridState> {
   }
 
   handleClick(id: number) {
-    console.log(id);
-    this.setState({portal: true})
+    this.setState({
+      selected: id,
+      portal: true,
+    });
   }
 
   genInventoryItems() {
@@ -57,12 +61,33 @@ export class Grid extends React.Component<IGridProps, IGridState> {
     return i;
   }
 
+  genOverlayText(): JSX.Element {
+    let shoe = this.state.shoes[this.state.selected];
+
+    if(shoe instanceof Shoe) {
+      return(
+        <div>
+          <H3><EditableText value={shoe.brand} /> --- <EditableText value={shoe.style} /></H3>
+          <p>Size: <EditableText value={shoe.size.toString()}/></p>
+          <p>UPC: <EditableText value={shoe.upc} /></p>
+        </div>
+      );
+    }
+    else {
+      return (
+        <div>
+          <H3><EditableText value={'Add a New Item'} /></H3>
+        </div>
+      );
+    }
+  }
+
   render() {
     return(
       <div style={GridCSS()}>
         <Overlay usePortal={true} isOpen={this.state.portal} onClose={() => this.setState({portal: false})}>
           <Card style={{margin: '100px', position: 'relative'}}>
-            <h3>Overlaid contents...</h3>
+            { this.genOverlayText() }
           </Card>
         </Overlay>
         { this.genInventoryItems() }
