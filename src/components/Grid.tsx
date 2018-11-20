@@ -111,7 +111,7 @@ export class Grid extends React.Component<IGridProps, IGridState> {
         ...state.form,
         ...v,
       }
-    }));    
+    }));
   }
 
   createShoe() {
@@ -149,7 +149,7 @@ export class Grid extends React.Component<IGridProps, IGridState> {
 
     if(shoe instanceof Shoe) {
       return(
-        <ShoeDetail shoe={shoe} handleEditableText={this.handleEditableText} createShoe={this.createShoe} deleteShoe={this.deleteShoe} />
+        <ShoeDetail shoe={shoe} handleEditableText={(type: string, value: string) => this.handleEditableText(type, value)} createShoe={this.createShoe} deleteShoe={this.deleteShoe} />
       );
     }
     else {
