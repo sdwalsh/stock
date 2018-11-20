@@ -19,13 +19,13 @@ export interface IGridState {
   y: number,
   portal: boolean,
   selected: number,
-  editShoe: {
+  form: {
     brand: string,
     style: string,
     upc: string,
-    size: number,
+    size: string,
   }
-  shoes: Item[],
+  shoes: (EmptyItem|Shoe)[],
 }
 
 // Generate n number of Empty Items
@@ -46,20 +46,22 @@ export class Grid extends React.Component<IGridProps, IGridState> {
       y: props.y,
       portal: false,
       selected: 0,
-      editShoe: {
+      form: {
         brand: '',
         style: '',
         upc: '',
-        size: 0,
+        size: '',
       },
       shoes: generateEmptyItems(props.x * props.y),
     }
 
+    // Sometimes a controversial choice as it exposes more error space
     this.handleClick = this.handleClick.bind(this);
+    this.handleFormUpdate = this.handleFormUpdate.bind(this);
     this.createNewShoe = this.createNewShoe.bind(this);
-    this.editShoe = this.editShoe.bind(this);
   }
 
+  // Function to pass down to Inventory Item
   handleClick(id: number) {
     this.setState({
       selected: id,
@@ -67,18 +69,51 @@ export class Grid extends React.Component<IGridProps, IGridState> {
     });
   }
 
+  // Controlled input function for text input (update onChange)
+  // Details below:
+  // https://stackoverflow.com/questions/44321326/property-value-does-not-exist-on-type-eventtarget-in-typescript
+  // https://blueprintjs.com/docs/#core/components/text-inputs
+  handleFormUpdate(e: React.ChangeEvent<HTMLInputElement>) {
+    let v = {};
+    switch(e.target.id) {
+      case('input-brand'):
+        v = { brand: e.target.value };
+        break;
+      case('input-style'):
+        v = { style: e.target.value };
+        break;
+      case('input-upc'):
+        v = { upc: e.target.value };
+        break;
+      case('input-size'):
+        v = { size: e.target.value };
+        break;
+      default:
+        break;
+    }
+    this.setState(state => ({
+      form: {
+        ...state.form,
+        ...v
+      }
+    }));
+  }
+
+  // Controlled input function for EditableText (update onChange)
+  handleEditableText(value: string) {
+
+  }
+
   createNewShoe() {
-
+    let shoes = [...this.state.shoes];
+    shoes[this.state.selected] = new Shoe(this.state.form.brand, this.state.form.style, this.state.form.upc, this.state.form.size);
+    this.setState({portal: false, shoes: shoes});
   }
 
-  updateShoe() {
-    
+  updateShoe(value: string) {
   }
 
-  editShoe(value: string | number) {
-
-  }
-
+  // Generate Cards
   genInventoryItems() {
     let i: JSX.Element[] = [];
     this.state.shoes.map((shoe, index) => {
@@ -87,50 +122,33 @@ export class Grid extends React.Component<IGridProps, IGridState> {
     return i;
   }
 
+  // Generate Overlay Portal
   genOverlayText(): JSX.Element {
     let shoe = this.state.shoes[this.state.selected];
 
     if(shoe instanceof Shoe) {
-      this.setState({
-        editShoe: {
-          brand: shoe.brand,
-          style: shoe.style,
-          upc: shoe.upc,
-          size: shoe.size,
-        }
-      });
-
       return(
         <div>
-          <H3><EditableText onConfirm={(value) => this.editShoe(value)} defaultValue={shoe.brand} /> --- <EditableText onChange={(value) => this.editShoe(value)} defaultValue={shoe.style} /></H3>
-          <p>Size: <EditableText onConfirm={(value) => this.editShoe(value)} defaultValue={shoe.size.toString()}/></p>
-          <p>UPC: <EditableText onConfirm={(value) => this.editShoe(value)} defaultValue={shoe.upc} /></p>
+          <H3><EditableText onChange={this.handleEditableText} defaultValue={shoe.brand} /> --- <EditableText onChange={this.handleEditableText} defaultValue={shoe.style} /></H3>
+          <p>Size: </p><EditableText onChange={this.handleEditableText} defaultValue={shoe.size.toString()}/>
+          <p>UPC: </p><EditableText onChange={this.handleEditableText} defaultValue={shoe.upc} />
           <ButtonGroup fill={true}>
-            <Button onClick={() => this.updateShoe()} intent={Intent.PRIMARY} icon="plus">Update</Button>
+            <Button onClick={() => this.updateShoe} intent={Intent.PRIMARY} icon="plus">Update</Button>
           </ButtonGroup>
         </div>
       );
     }
     else {
-      this.setState({
-        editShoe: {
-          brand: '',
-          style: '',
-          upc: '',
-          size: 0,
-        }
-      });
-
       return (
         <div>
           <FormGroup>
             <H3>Add a New Item</H3>
-            <Label>Brand: <InputGroup id="input-brand" placeholder="Brand" /></Label>
-            <Label>Style: <InputGroup id="input-style" placeholder="Style" /></Label>
-            <Label>UPC: <InputGroup id="input-upc" placeholder="UPC" /></Label>
-            <Label>Size: <InputGroup id="input-size" placeholder="Size" /></Label>
+            <Label>Brand: <InputGroup onChange={this.handleFormUpdate} id="input-brand" placeholder="Brand" /></Label>
+            <Label>Style: <InputGroup onChange={this.handleFormUpdate} id="input-style" placeholder="Style" /></Label>
+            <Label>UPC: <InputGroup onChange={this.handleFormUpdate} id="input-upc" placeholder="UPC" /></Label>
+            <Label>Size: <InputGroup onChange={this.handleFormUpdate} id="input-size" placeholder="Size" /></Label>
             <ButtonGroup fill={true}>
-              <Button onClick={() => this.createNewShoe()} intent={Intent.PRIMARY} icon="plus">Create</Button>
+              <Button onClick={this.createNewShoe} intent={Intent.PRIMARY} icon="plus">Create</Button>
             </ButtonGroup>
           </FormGroup>
         </div>

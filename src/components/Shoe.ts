@@ -17,9 +17,9 @@ export class Shoe implements Item {
   brand: string;
   upc: string;
   style: string;
-  size: number;
+  size: string;
 
-  constructor(brand: string, upc: string, style: string, size: number) {
+  constructor(brand: string, style: string, upc: string, size: string) {
     this.brand = brand;
     this.upc = upc;
     this.style = style;
