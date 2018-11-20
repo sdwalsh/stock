@@ -83,11 +83,11 @@ export class Grid extends React.Component<IGridProps, IGridState> {
       case('input-style'):
         v = { style: e.target.value };
         break;
-      case('input-upc'):
-        v = { upc: e.target.value };
-        break;
       case('input-size'):
         v = { size: e.target.value };
+        break;
+      case('input-upc'):
+        v = { upc: e.target.value };
         break;
       default:
         break;
@@ -95,14 +95,21 @@ export class Grid extends React.Component<IGridProps, IGridState> {
     this.setState(state => ({
       form: {
         ...state.form,
-        ...v
+        ...v,
       }
     }));
   }
 
   // Controlled input function for EditableText (update onChange)
-  handleEditableText(value: string) {
-
+  handleEditableText(type: string, value: string) {
+    let v = {};
+    v[type] = value;
+    this.setState(state => ({
+      form: {
+        ...state.form,
+        ...v,
+      }
+    }));    
   }
 
   createShoe() {
@@ -114,7 +121,15 @@ export class Grid extends React.Component<IGridProps, IGridState> {
   deleteShoe() {
     let shoes = [...this.state.shoes];
     shoes[this.state.selected] = new EmptyItem();
-    this.setState({portal: false, shoes: shoes});
+
+    // clear form state
+    let form = {
+      brand: '',
+      style: '',
+      upc: '',
+      size: '',
+    }
+    this.setState({portal: false, form: form, shoes: shoes});
   }
 
   // Generate Cards
@@ -133,10 +148,10 @@ export class Grid extends React.Component<IGridProps, IGridState> {
     if(shoe instanceof Shoe) {
       return(
         <div>
-          <H2><EditableText onChange={this.handleEditableText} defaultValue={shoe.brand} /></H2>
-          <H2><EditableText onChange={this.handleEditableText} defaultValue={shoe.style} /></H2>
-          <H4>Size: <EditableText onChange={this.handleEditableText} defaultValue={shoe.size}/></H4>
-          <H4>UPC: <EditableText onChange={this.handleEditableText} defaultValue={shoe.upc} /></H4>
+          <H2><EditableText onChange={(value) => this.handleEditableText('brand', value)} defaultValue={shoe.brand} /></H2>
+          <H2><EditableText onChange={(value) => this.handleEditableText('style', value)} defaultValue={shoe.style} /></H2>
+          <H4>Size: <EditableText onChange={(value) => this.handleEditableText('size', value)} defaultValue={shoe.size}/></H4>
+          <H4>UPC: <EditableText onChange={(value) => this.handleEditableText('upc', value)} defaultValue={shoe.upc} /></H4>
           <ButtonGroup fill={true}>
             <Button onClick={this.createShoe} intent={Intent.PRIMARY} icon="refresh">Update</Button>
             <Button onClick={this.deleteShoe} intent={Intent.DANGER} icon="trash">Delete</Button>
