@@ -153,8 +153,8 @@ export class Grid extends React.Component<IGridProps, IGridState> {
           <H4>Size: <EditableText onChange={(value) => this.handleEditableText('size', value)} defaultValue={shoe.size}/></H4>
           <H4>UPC: <EditableText onChange={(value) => this.handleEditableText('upc', value)} defaultValue={shoe.upc} /></H4>
           <ButtonGroup fill={true}>
-            <Button onClick={this.createShoe} intent={Intent.PRIMARY} icon="refresh">Update</Button>
             <Button onClick={this.deleteShoe} intent={Intent.DANGER} icon="trash">Delete</Button>
+            <Button onClick={this.createShoe} intent={Intent.PRIMARY} icon="refresh">Update</Button>            
           </ButtonGroup>
         </div>
       );
