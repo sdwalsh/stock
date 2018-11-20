@@ -1,9 +1,11 @@
 import * as React from 'react';
-import { Button, ButtonGroup, Card, H2, H3, H4, Overlay, EditableText, FormGroup, Label, InputGroup, Intent } from '@blueprintjs/core';
+import { Card, Overlay, } from '@blueprintjs/core';
 
 import { EmptyItem, Item, Shoe } from './Shoe';
 import { InventoryItem } from './InventoryItem';
 import { InventoryItemCSS, GridCSS } from './Styles';
+import NewShoe from './NewShoe';
+import ShoeDetail from './ShoeDetail';
 
 /*
   Grid Prop and State Interfaces
@@ -147,32 +149,12 @@ export class Grid extends React.Component<IGridProps, IGridState> {
 
     if(shoe instanceof Shoe) {
       return(
-        <div>
-          <H2><EditableText onChange={(value) => this.handleEditableText('brand', value)} defaultValue={shoe.brand} /></H2>
-          <H2><EditableText onChange={(value) => this.handleEditableText('style', value)} defaultValue={shoe.style} /></H2>
-          <H4>Size: <EditableText onChange={(value) => this.handleEditableText('size', value)} defaultValue={shoe.size}/></H4>
-          <H4>UPC: <EditableText onChange={(value) => this.handleEditableText('upc', value)} defaultValue={shoe.upc} /></H4>
-          <ButtonGroup fill={true}>
-            <Button onClick={this.deleteShoe} intent={Intent.DANGER} icon="trash">Delete</Button>
-            <Button onClick={this.createShoe} intent={Intent.PRIMARY} icon="refresh">Update</Button>            
-          </ButtonGroup>
-        </div>
+        <ShoeDetail shoe={shoe} handleEditableText={this.handleEditableText} createShoe={this.createShoe} deleteShoe={this.deleteShoe} />
       );
     }
     else {
       return (
-        <div>
-          <FormGroup>
-            <H3>Add a New Item</H3>
-            <Label>Brand: <InputGroup onChange={this.handleFormUpdate} id="input-brand" placeholder="Brand" /></Label>
-            <Label>Style: <InputGroup onChange={this.handleFormUpdate} id="input-style" placeholder="Style" /></Label>
-            <Label>UPC: <InputGroup onChange={this.handleFormUpdate} id="input-upc" placeholder="UPC" /></Label>
-            <Label>Size: <InputGroup onChange={this.handleFormUpdate} id="input-size" placeholder="Size" /></Label>
-            <ButtonGroup fill={true}>
-              <Button onClick={this.createShoe} intent={Intent.PRIMARY} icon="plus">Create</Button>
-            </ButtonGroup>
-          </FormGroup>
-        </div>
+        <NewShoe handleFormUpdate={this.handleFormUpdate} createShoe={this.createShoe} />
       );
     }
   }

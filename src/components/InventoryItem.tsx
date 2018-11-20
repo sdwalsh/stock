@@ -30,7 +30,7 @@ export class InventoryItem extends React.Component <IIventoryItemProps, object> 
     else {
       contents = (
         <div>
-          <p>Place a shoe here</p>
+          <p>Click to add a shoe.</p>
         </div>
       );
     }
