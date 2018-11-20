@@ -6,7 +6,7 @@ import { Grid } from './components/Grid';
 class App extends React.Component {
   public render() {
     let rootCSS = {
-      maxWidth: '800px',
+      maxWidth: '1080px',
       margin: '25px auto',
     }
 

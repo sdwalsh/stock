@@ -25,5 +25,6 @@ export const GridRowCSS: React.CSSProperties = {
 }
 
 export const InventoryItemCSS: React.CSSProperties = {
-  margin: '10px'
+  margin: '10px',
+  overflow: 'hidden',
 }
