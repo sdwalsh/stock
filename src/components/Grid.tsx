@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Button, ButtonGroup, Card, H3, Overlay, EditableText, FormGroup, Label, InputGroup, Intent } from '@blueprintjs/core';
+import { Button, ButtonGroup, Card, H2, H3, H4, Overlay, EditableText, FormGroup, Label, InputGroup, Intent } from '@blueprintjs/core';
 
 import { EmptyItem, Item, Shoe } from './Shoe';
 import { InventoryItem } from './InventoryItem';
@@ -58,7 +58,8 @@ export class Grid extends React.Component<IGridProps, IGridState> {
     // Sometimes a controversial choice as it exposes more error space
     this.handleClick = this.handleClick.bind(this);
     this.handleFormUpdate = this.handleFormUpdate.bind(this);
-    this.createNewShoe = this.createNewShoe.bind(this);
+    this.createShoe = this.createShoe.bind(this);
+    this.deleteShoe = this.deleteShoe.bind(this);
   }
 
   // Function to pass down to Inventory Item
@@ -104,13 +105,16 @@ export class Grid extends React.Component<IGridProps, IGridState> {
 
   }
 
-  createNewShoe() {
+  createShoe() {
     let shoes = [...this.state.shoes];
     shoes[this.state.selected] = new Shoe(this.state.form.brand, this.state.form.style, this.state.form.upc, this.state.form.size);
     this.setState({portal: false, shoes: shoes});
   }
 
-  updateShoe(value: string) {
+  deleteShoe() {
+    let shoes = [...this.state.shoes];
+    shoes[this.state.selected] = new EmptyItem();
+    this.setState({portal: false, shoes: shoes});
   }
 
   // Generate Cards
@@ -129,11 +133,13 @@ export class Grid extends React.Component<IGridProps, IGridState> {
     if(shoe instanceof Shoe) {
       return(
         <div>
-          <H3><EditableText onChange={this.handleEditableText} defaultValue={shoe.brand} /> --- <EditableText onChange={this.handleEditableText} defaultValue={shoe.style} /></H3>
-          <p>Size: </p><EditableText onChange={this.handleEditableText} defaultValue={shoe.size.toString()}/>
-          <p>UPC: </p><EditableText onChange={this.handleEditableText} defaultValue={shoe.upc} />
+          <H2><EditableText onChange={this.handleEditableText} defaultValue={shoe.brand} /></H2>
+          <H2><EditableText onChange={this.handleEditableText} defaultValue={shoe.style} /></H2>
+          <H4>Size: <EditableText onChange={this.handleEditableText} defaultValue={shoe.size}/></H4>
+          <H4>UPC: <EditableText onChange={this.handleEditableText} defaultValue={shoe.upc} /></H4>
           <ButtonGroup fill={true}>
-            <Button onClick={() => this.updateShoe} intent={Intent.PRIMARY} icon="plus">Update</Button>
+            <Button onClick={this.createShoe} intent={Intent.PRIMARY} icon="refresh">Update</Button>
+            <Button onClick={this.deleteShoe} intent={Intent.DANGER} icon="trash">Delete</Button>
           </ButtonGroup>
         </div>
       );
@@ -148,7 +154,7 @@ export class Grid extends React.Component<IGridProps, IGridState> {
             <Label>UPC: <InputGroup onChange={this.handleFormUpdate} id="input-upc" placeholder="UPC" /></Label>
             <Label>Size: <InputGroup onChange={this.handleFormUpdate} id="input-size" placeholder="Size" /></Label>
             <ButtonGroup fill={true}>
-              <Button onClick={this.createNewShoe} intent={Intent.PRIMARY} icon="plus">Create</Button>
+              <Button onClick={this.createShoe} intent={Intent.PRIMARY} icon="plus">Create</Button>
             </ButtonGroup>
           </FormGroup>
         </div>
