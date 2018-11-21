@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { Card, Overlay, } from '@blueprintjs/core';
 
-import { EmptyItem, Item, Shoe } from './Shoe';
+import { EmptyItem, Shoe } from './Shoe';
 import { InventoryItem } from './InventoryItem';
 import { InventoryItemCSS, GridCSS } from './Styles';
-import NewShoe from './NewShoe';
-import ShoeDetail from './ShoeDetail';
+import NewShoe from './Overlays/NewShoe';
+import ShoeDetail from './Overlays/ShoeDetail';
 
 /*
   Grid Prop and State Interfaces
@@ -24,15 +24,6 @@ export interface IGridState {
   shoes: (EmptyItem|Shoe)[],
 }
 
-// Generate n number of Empty Items
-function generateEmptyItems(n: number) {
-  let s: Item[] = [];
-  for(let x = 0; x < n; x++) {
-    s.push(new EmptyItem())
-  }
-  return s;
-}
-
 export class Grid extends React.Component<IGridProps, IGridState> {
   constructor(props: IGridProps) {
     super(props);
@@ -42,7 +33,7 @@ export class Grid extends React.Component<IGridProps, IGridState> {
       y: props.y,
       portal: false,
       selected: 0,
-      shoes: generateEmptyItems(props.x * props.y),
+      shoes: Array(this.props.x * this.props.y).fill(new EmptyItem),
     };
 
     // Sometimes a controversial choice as it exposes more error space
@@ -83,16 +74,10 @@ export class Grid extends React.Component<IGridProps, IGridState> {
   // Generate Overlay Portal
   genOverlayText(): JSX.Element {
     let shoe = this.state.shoes[this.state.selected];
-
     if(shoe instanceof Shoe) {
-      return(
-        <ShoeDetail shoe={shoe} createShoe={this.createShoe} deleteShoe={this.deleteShoe} />
-      );
-    }
-    else {
-      return (
-        <NewShoe createShoe={this.createShoe} />
-      );
+      return(<ShoeDetail shoe={shoe} createShoe={this.createShoe} deleteShoe={this.deleteShoe} />);
+    } else {
+      return (<NewShoe createShoe={this.createShoe} />);
     }
   }
 
