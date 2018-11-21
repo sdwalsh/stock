@@ -1,9 +1,11 @@
 import * as React from 'react';
-import { Button, ButtonGroup, Card, H2, H3, H4, Overlay, EditableText, FormGroup, Label, InputGroup, Intent } from '@blueprintjs/core';
+import { Card, Overlay, } from '@blueprintjs/core';
 
 import { EmptyItem, Item, Shoe } from './Shoe';
 import { InventoryItem } from './InventoryItem';
 import { InventoryItemCSS, GridCSS } from './Styles';
+import NewShoe from './NewShoe';
+import ShoeDetail from './ShoeDetail';
 
 /*
   Grid Prop and State Interfaces
@@ -19,12 +21,6 @@ export interface IGridState {
   y: number,
   portal: boolean,
   selected: number,
-  form: {
-    brand: string,
-    style: string,
-    upc: string,
-    size: string,
-  }
   shoes: (EmptyItem|Shoe)[],
 }
 
@@ -46,18 +42,11 @@ export class Grid extends React.Component<IGridProps, IGridState> {
       y: props.y,
       portal: false,
       selected: 0,
-      form: {
-        brand: '',
-        style: '',
-        upc: '',
-        size: '',
-      },
       shoes: generateEmptyItems(props.x * props.y),
-    }
+    };
 
     // Sometimes a controversial choice as it exposes more error space
     this.handleClick = this.handleClick.bind(this);
-    this.handleFormUpdate = this.handleFormUpdate.bind(this);
     this.createShoe = this.createShoe.bind(this);
     this.deleteShoe = this.deleteShoe.bind(this);
   }
@@ -70,66 +59,16 @@ export class Grid extends React.Component<IGridProps, IGridState> {
     });
   }
 
-  // Controlled input function for text input (update onChange)
-  // Details below:
-  // https://stackoverflow.com/questions/44321326/property-value-does-not-exist-on-type-eventtarget-in-typescript
-  // https://blueprintjs.com/docs/#core/components/text-inputs
-  handleFormUpdate(e: React.ChangeEvent<HTMLInputElement>) {
-    let v = {};
-    switch(e.target.id) {
-      case('input-brand'):
-        v = { brand: e.target.value };
-        break;
-      case('input-style'):
-        v = { style: e.target.value };
-        break;
-      case('input-size'):
-        v = { size: e.target.value };
-        break;
-      case('input-upc'):
-        v = { upc: e.target.value };
-        break;
-      default:
-        break;
-    }
-    this.setState(state => ({
-      form: {
-        ...state.form,
-        ...v,
-      }
-    }));
-  }
-
-  // Controlled input function for EditableText (update onChange)
-  handleEditableText(type: string, value: string) {
-    let v = {};
-    v[type] = value;
-    this.setState(state => ({
-      form: {
-        ...state.form,
-        ...v,
-      }
-    }));    
-  }
-
-  createShoe() {
-    let shoes = [...this.state.shoes];
-    shoes[this.state.selected] = new Shoe(this.state.form.brand, this.state.form.style, this.state.form.upc, this.state.form.size);
+  createShoe(shoe: {brand: string, style: string, upc: string, size: string}) {
+    let shoes = this.state.shoes.slice(0);
+    shoes[this.state.selected] = new Shoe(shoe.brand, shoe.style, shoe.upc, shoe.size);
     this.setState({portal: false, shoes: shoes});
   }
 
   deleteShoe() {
     let shoes = [...this.state.shoes];
     shoes[this.state.selected] = new EmptyItem();
-
-    // clear form state
-    let form = {
-      brand: '',
-      style: '',
-      upc: '',
-      size: '',
-    }
-    this.setState({portal: false, form: form, shoes: shoes});
+    this.setState({portal: false, shoes: shoes});
   }
 
   // Generate Cards
@@ -147,32 +86,12 @@ export class Grid extends React.Component<IGridProps, IGridState> {
 
     if(shoe instanceof Shoe) {
       return(
-        <div>
-          <H2><EditableText onChange={(value) => this.handleEditableText('brand', value)} defaultValue={shoe.brand} /></H2>
-          <H2><EditableText onChange={(value) => this.handleEditableText('style', value)} defaultValue={shoe.style} /></H2>
-          <H4>Size: <EditableText onChange={(value) => this.handleEditableText('size', value)} defaultValue={shoe.size}/></H4>
-          <H4>UPC: <EditableText onChange={(value) => this.handleEditableText('upc', value)} defaultValue={shoe.upc} /></H4>
-          <ButtonGroup fill={true}>
-            <Button onClick={this.deleteShoe} intent={Intent.DANGER} icon="trash">Delete</Button>
-            <Button onClick={this.createShoe} intent={Intent.PRIMARY} icon="refresh">Update</Button>            
-          </ButtonGroup>
-        </div>
+        <ShoeDetail shoe={shoe} createShoe={this.createShoe} deleteShoe={this.deleteShoe} />
       );
     }
     else {
       return (
-        <div>
-          <FormGroup>
-            <H3>Add a New Item</H3>
-            <Label>Brand: <InputGroup onChange={this.handleFormUpdate} id="input-brand" placeholder="Brand" /></Label>
-            <Label>Style: <InputGroup onChange={this.handleFormUpdate} id="input-style" placeholder="Style" /></Label>
-            <Label>UPC: <InputGroup onChange={this.handleFormUpdate} id="input-upc" placeholder="UPC" /></Label>
-            <Label>Size: <InputGroup onChange={this.handleFormUpdate} id="input-size" placeholder="Size" /></Label>
-            <ButtonGroup fill={true}>
-              <Button onClick={this.createShoe} intent={Intent.PRIMARY} icon="plus">Create</Button>
-            </ButtonGroup>
-          </FormGroup>
-        </div>
+        <NewShoe createShoe={this.createShoe} />
       );
     }
   }
