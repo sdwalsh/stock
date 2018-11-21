@@ -55,11 +55,10 @@ export class Grid extends React.Component<IGridProps, IGridState> {
         size: '',
       },
       shoes: generateEmptyItems(props.x * props.y),
-    }
+    };
 
     // Sometimes a controversial choice as it exposes more error space
     this.handleClick = this.handleClick.bind(this);
-    this.handleFormUpdate = this.handleFormUpdate.bind(this);
     this.createShoe = this.createShoe.bind(this);
     this.deleteShoe = this.deleteShoe.bind(this);
   }
@@ -70,36 +69,6 @@ export class Grid extends React.Component<IGridProps, IGridState> {
       selected: id,
       portal: true,
     });
-  }
-
-  // Controlled input function for text input (update onChange)
-  // Details below:
-  // https://stackoverflow.com/questions/44321326/property-value-does-not-exist-on-type-eventtarget-in-typescript
-  // https://blueprintjs.com/docs/#core/components/text-inputs
-  handleFormUpdate(e: React.ChangeEvent<HTMLInputElement>) {
-    let v = {};
-    switch(e.target.id) {
-      case('input-brand'):
-        v = { brand: e.target.value };
-        break;
-      case('input-style'):
-        v = { style: e.target.value };
-        break;
-      case('input-size'):
-        v = { size: e.target.value };
-        break;
-      case('input-upc'):
-        v = { upc: e.target.value };
-        break;
-      default:
-        break;
-    }
-    this.setState(state => ({
-      form: {
-        ...state.form,
-        ...v,
-      }
-    }));
   }
 
   // Controlled input function for EditableText (update onChange)
@@ -114,7 +83,7 @@ export class Grid extends React.Component<IGridProps, IGridState> {
     }));
   }
 
-  createShoe() {
+  createShoe(shoe: {brand: string, style: string, upc: string, size: string}) {
     let shoes = [...this.state.shoes];
     shoes[this.state.selected] = new Shoe(this.state.form.brand, this.state.form.style, this.state.form.upc, this.state.form.size);
     this.setState({portal: false, shoes: shoes});
@@ -154,7 +123,7 @@ export class Grid extends React.Component<IGridProps, IGridState> {
     }
     else {
       return (
-        <NewShoe handleFormUpdate={this.handleFormUpdate} createShoe={this.createShoe} />
+        <NewShoe createShoe={this.createShoe} />
       );
     }
   }

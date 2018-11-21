@@ -5,7 +5,7 @@ import { Shoe } from './Shoe';
 export interface IShoeDetailProps {
   shoe: Shoe,
   handleEditableText: (type: string, value: string) => void,
-  createShoe: () => void,
+  createShoe: (shoe: {brand: string, style: string, upc: string, size: string}) => void,
   deleteShoe: () => void,
 }
 
