@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Card, Overlay, } from '@blueprintjs/core';
 
-import { EmptyItem, Item, Shoe } from './Shoe';
+import { EmptyItem, Shoe } from './Shoe';
 import { InventoryItem } from './InventoryItem';
 import { InventoryItemCSS, GridCSS } from './Styles';
 import NewShoe from './Overlays/NewShoe';
@@ -24,15 +24,6 @@ export interface IGridState {
   shoes: (EmptyItem|Shoe)[],
 }
 
-// Generate n number of Empty Items
-function generateEmptyItems(n: number) {
-  let s: Item[] = [];
-  for(let x = 0; x < n; x++) {
-    s.push(new EmptyItem())
-  }
-  return s;
-}
-
 export class Grid extends React.Component<IGridProps, IGridState> {
   constructor(props: IGridProps) {
     super(props);
@@ -42,7 +33,7 @@ export class Grid extends React.Component<IGridProps, IGridState> {
       y: props.y,
       portal: false,
       selected: 0,
-      shoes: generateEmptyItems(props.x * props.y),
+      shoes: Array(this.props.x * this.props.y).fill(new EmptyItem),
     };
 
     // Sometimes a controversial choice as it exposes more error space
