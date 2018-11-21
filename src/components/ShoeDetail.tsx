@@ -20,10 +20,10 @@ export class ShoeDetail extends React.Component<IShoeDetailProps, IShoeDetailSta
     super(props);
 
     this.state = {
-      brand: '',
-      style: '',
-      upc: '',
-      size: '',
+      brand: this.props.shoe.brand,
+      style: this.props.shoe.style,
+      upc: this.props.shoe.upc,
+      size: this.props.shoe.size,
     };
 
     this.handleEditableText = this.handleEditableText.bind(this);
@@ -44,13 +44,7 @@ export class ShoeDetail extends React.Component<IShoeDetailProps, IShoeDetailSta
       case('delete'):
         return this.props.deleteShoe();
       case('update'):
-        let s = Object.assign({}, this.state)
-        this.setState({
-          brand: '',
-          style: '',
-          upc: '',
-          size: '',
-        });
+        let s = Object.assign({}, this.state);
         return this.props.createShoe(s);
       default:
         return;
