@@ -56,7 +56,6 @@ export class NewShoe extends React.Component<INewShoeProps, INewShoeState> {
   }
 
   handleClick() {
-    // Copy state and empty it
     let s = Object.assign({}, this.state)
     this.setState({
       brand: '',
@@ -64,7 +63,6 @@ export class NewShoe extends React.Component<INewShoeProps, INewShoeState> {
       upc: '',
       size: '',
     });
-
     return this.props.createShoe(s);
   }
 

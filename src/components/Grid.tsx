@@ -21,12 +21,6 @@ export interface IGridState {
   y: number,
   portal: boolean,
   selected: number,
-  form: {
-    brand: string,
-    style: string,
-    upc: string,
-    size: string,
-  }
   shoes: (EmptyItem|Shoe)[],
 }
 
@@ -48,12 +42,6 @@ export class Grid extends React.Component<IGridProps, IGridState> {
       y: props.y,
       portal: false,
       selected: 0,
-      form: {
-        brand: '',
-        style: '',
-        upc: '',
-        size: '',
-      },
       shoes: generateEmptyItems(props.x * props.y),
     };
 
@@ -71,36 +59,16 @@ export class Grid extends React.Component<IGridProps, IGridState> {
     });
   }
 
-  // Controlled input function for EditableText (update onChange)
-  handleEditableText(type: string, value: string) {
-    let v = {};
-    v[type] = value;
-    this.setState(state => ({
-      form: {
-        ...state.form,
-        ...v,
-      }
-    }));
-  }
-
   createShoe(shoe: {brand: string, style: string, upc: string, size: string}) {
-    let shoes = [...this.state.shoes];
-    shoes[this.state.selected] = new Shoe(this.state.form.brand, this.state.form.style, this.state.form.upc, this.state.form.size);
+    let shoes = this.state.shoes.slice(0);
+    shoes[this.state.selected] = new Shoe(shoe.brand, shoe.style, shoe.upc, shoe.size);
     this.setState({portal: false, shoes: shoes});
   }
 
   deleteShoe() {
     let shoes = [...this.state.shoes];
     shoes[this.state.selected] = new EmptyItem();
-
-    // clear form state
-    let form = {
-      brand: '',
-      style: '',
-      upc: '',
-      size: '',
-    }
-    this.setState({portal: false, form: form, shoes: shoes});
+    this.setState({portal: false, shoes: shoes});
   }
 
   // Generate Cards
@@ -118,7 +86,7 @@ export class Grid extends React.Component<IGridProps, IGridState> {
 
     if(shoe instanceof Shoe) {
       return(
-        <ShoeDetail shoe={shoe} handleEditableText={(type: string, value: string) => this.handleEditableText(type, value)} createShoe={this.createShoe} deleteShoe={this.deleteShoe} />
+        <ShoeDetail shoe={shoe} createShoe={this.createShoe} deleteShoe={this.deleteShoe} />
       );
     }
     else {
