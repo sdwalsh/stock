@@ -4,8 +4,8 @@ import { Card, Overlay, } from '@blueprintjs/core';
 import { EmptyItem, Item, Shoe } from './Shoe';
 import { InventoryItem } from './InventoryItem';
 import { InventoryItemCSS, GridCSS } from './Styles';
-import NewShoe from './NewShoe';
-import ShoeDetail from './ShoeDetail';
+import NewShoe from './Overlays/NewShoe';
+import ShoeDetail from './Overlays/ShoeDetail';
 
 /*
   Grid Prop and State Interfaces
@@ -83,16 +83,10 @@ export class Grid extends React.Component<IGridProps, IGridState> {
   // Generate Overlay Portal
   genOverlayText(): JSX.Element {
     let shoe = this.state.shoes[this.state.selected];
-
     if(shoe instanceof Shoe) {
-      return(
-        <ShoeDetail shoe={shoe} createShoe={this.createShoe} deleteShoe={this.deleteShoe} />
-      );
-    }
-    else {
-      return (
-        <NewShoe createShoe={this.createShoe} />
-      );
+      return(<ShoeDetail shoe={shoe} createShoe={this.createShoe} deleteShoe={this.deleteShoe} />);
+    } else {
+      return (<NewShoe createShoe={this.createShoe} />);
     }
   }
 

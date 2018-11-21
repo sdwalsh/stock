@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Button, ButtonGroup, EditableText, H2, H4, Intent } from '@blueprintjs/core';
-import { Shoe } from './Shoe';
+import { Shoe } from '../Shoe';
 
 export interface IShoeDetailProps {
   shoe: Shoe,
