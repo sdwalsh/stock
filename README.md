@@ -1,5 +1,8 @@
 # Inventory Management
 
+## Project for StockX Application Process
+Not maintained
+
 Built with
 
 - [Create React App](https://github.com/facebook/create-react-app)
